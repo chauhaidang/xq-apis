@@ -49,18 +49,22 @@ const (
 const (
 	// GreeterSayHelloProcedure is the fully-qualified name of the Greeter's SayHello RPC.
 	GreeterSayHelloProcedure = "/helloworld.Greeter/SayHello"
+	// GreeterSayHelloAgainProcedure is the fully-qualified name of the Greeter's SayHelloAgain RPC.
+	GreeterSayHelloAgainProcedure = "/helloworld.Greeter/SayHelloAgain"
 )
 
 // These variables are the protoreflect.Descriptor objects for the RPCs defined in this package.
 var (
-	greeterServiceDescriptor        = helloworld.File_helloworld_helloworld_proto.Services().ByName("Greeter")
-	greeterSayHelloMethodDescriptor = greeterServiceDescriptor.Methods().ByName("SayHello")
+	greeterServiceDescriptor             = helloworld.File_helloworld_helloworld_proto.Services().ByName("Greeter")
+	greeterSayHelloMethodDescriptor      = greeterServiceDescriptor.Methods().ByName("SayHello")
+	greeterSayHelloAgainMethodDescriptor = greeterServiceDescriptor.Methods().ByName("SayHelloAgain")
 )
 
 // GreeterClient is a client for the helloworld.Greeter service.
 type GreeterClient interface {
 	// Sends a greeting
 	SayHello(context.Context, *connect.Request[helloworld.HelloRequest]) (*connect.Response[helloworld.HelloReply], error)
+	SayHelloAgain(context.Context, *connect.Request[helloworld.HelloRequest]) (*connect.Response[helloworld.HelloReply], error)
 }
 
 // NewGreeterClient constructs a client for the helloworld.Greeter service. By default, it uses the
@@ -79,12 +83,19 @@ func NewGreeterClient(httpClient connect.HTTPClient, baseURL string, opts ...con
 			connect.WithSchema(greeterSayHelloMethodDescriptor),
 			connect.WithClientOptions(opts...),
 		),
+		sayHelloAgain: connect.NewClient[helloworld.HelloRequest, helloworld.HelloReply](
+			httpClient,
+			baseURL+GreeterSayHelloAgainProcedure,
+			connect.WithSchema(greeterSayHelloAgainMethodDescriptor),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // greeterClient implements GreeterClient.
 type greeterClient struct {
-	sayHello *connect.Client[helloworld.HelloRequest, helloworld.HelloReply]
+	sayHello      *connect.Client[helloworld.HelloRequest, helloworld.HelloReply]
+	sayHelloAgain *connect.Client[helloworld.HelloRequest, helloworld.HelloReply]
 }
 
 // SayHello calls helloworld.Greeter.SayHello.
@@ -92,10 +103,16 @@ func (c *greeterClient) SayHello(ctx context.Context, req *connect.Request[hello
 	return c.sayHello.CallUnary(ctx, req)
 }
 
+// SayHelloAgain calls helloworld.Greeter.SayHelloAgain.
+func (c *greeterClient) SayHelloAgain(ctx context.Context, req *connect.Request[helloworld.HelloRequest]) (*connect.Response[helloworld.HelloReply], error) {
+	return c.sayHelloAgain.CallUnary(ctx, req)
+}
+
 // GreeterHandler is an implementation of the helloworld.Greeter service.
 type GreeterHandler interface {
 	// Sends a greeting
 	SayHello(context.Context, *connect.Request[helloworld.HelloRequest]) (*connect.Response[helloworld.HelloReply], error)
+	SayHelloAgain(context.Context, *connect.Request[helloworld.HelloRequest]) (*connect.Response[helloworld.HelloReply], error)
 }
 
 // NewGreeterHandler builds an HTTP handler from the service implementation. It returns the path on
@@ -110,10 +127,18 @@ func NewGreeterHandler(svc GreeterHandler, opts ...connect.HandlerOption) (strin
 		connect.WithSchema(greeterSayHelloMethodDescriptor),
 		connect.WithHandlerOptions(opts...),
 	)
+	greeterSayHelloAgainHandler := connect.NewUnaryHandler(
+		GreeterSayHelloAgainProcedure,
+		svc.SayHelloAgain,
+		connect.WithSchema(greeterSayHelloAgainMethodDescriptor),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/helloworld.Greeter/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case GreeterSayHelloProcedure:
 			greeterSayHelloHandler.ServeHTTP(w, r)
+		case GreeterSayHelloAgainProcedure:
+			greeterSayHelloAgainHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -125,4 +150,8 @@ type UnimplementedGreeterHandler struct{}
 
 func (UnimplementedGreeterHandler) SayHello(context.Context, *connect.Request[helloworld.HelloRequest]) (*connect.Response[helloworld.HelloReply], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("helloworld.Greeter.SayHello is not implemented"))
+}
+
+func (UnimplementedGreeterHandler) SayHelloAgain(context.Context, *connect.Request[helloworld.HelloRequest]) (*connect.Response[helloworld.HelloReply], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("helloworld.Greeter.SayHelloAgain is not implemented"))
 }
