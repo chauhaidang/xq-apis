@@ -11,7 +11,6 @@ message GetAccountRequest {
 message GetAccountResponse {
     int32 id = 1;
     google.type.Money balance = 2;
-    bool default = 3;
 }
 
 service AccountService {
