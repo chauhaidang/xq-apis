@@ -4,12 +4,6 @@ managed:
   go_package_prefix:
     default: github.com/chauhaidang/apis/gen
 plugins:
-  - plugin: buf.build/protocolbuffers/go
-    out: gen/buf
-    opt: paths=source_relative
-  - plugin: buf.build/connectrpc/go
-    out: gen/buf
-    opt: paths=source_relative
   - plugin: go-grpc
     out: gen
     opt: paths=source_relative
