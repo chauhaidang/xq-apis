@@ -13,10 +13,6 @@ gradle-app.setting
 *.ipr
 out/
 
-# OpenAPI Generator
-xq-api-test-plan/
-xq-api-test-plan-node/
-
 # Java
 *.class
 *.log
