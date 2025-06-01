@@ -1,6 +1,5 @@
 .github/workflows/maven.yml
 .gitignore
-.openapi-generator-ignore
 .travis.yml
 README.md
 api/openapi.yaml
@@ -35,8 +34,3 @@ src/main/java/com/xq/testplan/api/model/ErrorResponse.java
 src/main/java/com/xq/testplan/api/model/ListRequirementsDto.java
 src/main/java/com/xq/testplan/api/model/Requirement.java
 src/main/java/com/xq/testplan/api/model/Response.java
-src/test/java/com/xq/testplan/api/client/RestApisTestPlanApiTest.java
-src/test/java/com/xq/testplan/api/model/ErrorResponseTest.java
-src/test/java/com/xq/testplan/api/model/ListRequirementsDtoTest.java
-src/test/java/com/xq/testplan/api/model/RequirementTest.java
-src/test/java/com/xq/testplan/api/model/ResponseTest.java
