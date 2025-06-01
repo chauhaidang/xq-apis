@@ -11,4 +11,4 @@ plugins {
 }
 
 rootProject.name = 'xq-apis'
-include('lib')
+include('xq-api-test-plan')

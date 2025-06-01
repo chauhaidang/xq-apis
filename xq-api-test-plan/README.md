@@ -2,9 +2,9 @@
 
 TestPlan microservice
 
-- API version: v1
+- API version: 1.0.0
 
-- Build date: 2025-06-01T14:53:35.313270+07:00[Asia/Ho_Chi_Minh]
+- Build date: 2025-06-01T15:22:16.597293+07:00[Asia/Ho_Chi_Minh]
 
 - Generator version: 7.12.0
 
@@ -45,7 +45,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.xq</groupId>
   <artifactId>xq-api-test-plan</artifactId>
-  <version>v1</version>
+  <version>1.0.0</version>
   <scope>compile</scope>
 </dependency>
 ```
@@ -55,7 +55,7 @@ Add this dependency to your project's POM:
 Add this dependency to your project's build file:
 
 ```groovy
-compile "com.xq:xq-api-test-plan:v1"
+compile "com.xq:xq-api-test-plan:1.0.0"
 ```
 
 ### Others
@@ -68,7 +68,7 @@ mvn clean package
 
 Then manually install the following JARs:
 
-- `target/xq-api-test-plan-v1.jar`
+- `target/xq-api-test-plan-1.0.0.jar`
 - `target/lib/*.jar`
 
 ## Getting Started
